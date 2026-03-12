@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "BehaviorTree/BehaviorTree.h"
 #include "StealthEnemyCharacter.generated.h"
+
 
 UCLASS()
 class STEALTHHEIST_API AStealthEnemyCharacter : public ACharacter
@@ -26,4 +28,10 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	class UBehaviorTree* TreeAsset;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	class APatrolPath* PatrolPath;
 };

@@ -2,12 +2,22 @@
 
 
 #include "AI/PatrolPath.h"
+#include "Components/BillboardComponent.h"
+#include "Components/ArrowComponent.h"
+#include "Components/SplineComponent.h"
 
 // Sets default values
 APatrolPath::APatrolPath()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
+	Billboard = CreateDefaultSubobject<UBillboardComponent>("Billboard");
+	Billboard->SetupAttachment(GetRootComponent());
+	FacingDirection = CreateDefaultSubobject<UArrowComponent>("FacingDirection");
+	FacingDirection->SetupAttachment(Billboard);
+	Path = CreateDefaultSubobject<USplineComponent>("Path");
+	Path->SetupAttachment(RootComponent);
+	Path->bDrawDebug = true;
 
 }
 
