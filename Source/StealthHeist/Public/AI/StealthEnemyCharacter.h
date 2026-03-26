@@ -32,6 +32,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	class UBehaviorTree* TreeAsset;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class APatrolPath* PatrolPath;
 };
