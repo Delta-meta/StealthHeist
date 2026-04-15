@@ -18,38 +18,33 @@ class STEALTHHEIST_API AStealthEnemyAIController : public AAIController
 {
 	GENERATED_BODY()
 	public:
-		AStealthEnemyAIController();		
+		AStealthEnemyAIController();
 		virtual void OnPossess(APawn* InPawn) override;
 		virtual FRotator GetControlRotation() const override;
 
-		UFUNCTION()
-		void OnPawnDetected(const TArray<AActor*>& DetectedPawns);
-
-		virtual void Tick(float DeltaSeconds) override;
-		virtual void BeginPlay() override;
-
 	protected:
-		UPROPERTY(Transient)
-		class UBehaviorTreeComponent* BTComp;
-
-		UPROPERTY(Transient)
-		class UBlackboardComponent* BBComp;
+		UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+			float AISightRadius = 500.f;
 
 		UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-		float AISightRadius = 500.f;
+			float AISightAge = 5.f;
 
 		UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-		float AISightAge = 5.f;
-
-		UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-		float AILoseSightRadius = AISightRadius + 50.f;
+			float AILoseSightRadius = AISightRadius + 50.f;
 
 		UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
-		float AIFieldOfView = 90.f;
+			float AIFieldOfView = 90.f;
 
 		UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-		class UAISenseConfig_Sight* SightConfig;
+			UAISenseConfig_Sight* SightConfig;
 
-		UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-		float DistanceToPlayer = 0.0f;
+		UPROPERTY(VisibleAnywhere)
+			UAIPerceptionComponent* AIPerceptionComponent;
+
+	private:
+		UBehaviorTreeComponent* BehaviorTreeComponent;
+		UBlackboardComponent* BlackboardComponent;
+
+		UFUNCTION()
+			void OnPawnDetected(const TArray<AActor*>& DetectedPawns);
 };

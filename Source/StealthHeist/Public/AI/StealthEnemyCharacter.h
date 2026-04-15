@@ -17,21 +17,16 @@ public:
 	// Sets default values for this character's properties
 	AStealthEnemyCharacter();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	class UBehaviorTree* TreeAsset;
+		class UBehaviorTree* TreeAsset = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class APatrolPath* PatrolPath;
+		class APatrolPath* PatrolPath = nullptr;
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 };

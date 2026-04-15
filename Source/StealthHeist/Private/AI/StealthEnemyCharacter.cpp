@@ -31,10 +31,3 @@ void AStealthEnemyCharacter::Tick(float DeltaTime)
 
 }
 
-// Called to bind functionality to input
-void AStealthEnemyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-}
-

@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
+#include "StealthHeist/StealthHeistCharacter.h"
 #include "AI/StealthEnemyAIController.h"
 #include "AI/StealthEnemyCharacter.h"
 #include "BehaviorTree/BehaviorTree.h"
@@ -8,15 +9,13 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Sight.h"
-#include "BehaviorTree/Blackboard/BlackboardKeyType_Bool.h"
-#include "BehaviorTree/Blackboard/BlackboardKeyType_Object.h"
+#include "Perception/AISense_Sight.h"
 
 AStealthEnemyAIController::AStealthEnemyAIController()
 {
-    BTComp = CreateDefaultSubobject<UBehaviorTreeComponent>("BehaviorTree");
-    BBComp = CreateDefaultSubobject<UBlackboardComponent>("Blackboard");
-    PrimaryActorTick.bCanEverTick = true;
-
+    BehaviorTreeComponent = CreateDefaultSubobject<UBehaviorTreeComponent>("BehaviorTreeComp");
+    BlackboardComponent = CreateDefaultSubobject<UBlackboardComponent>("BlackboardComp");
+    
     SightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>("Sight Config");
     SightConfig->SightRadius = AISightRadius;
     SightConfig->LoseSightRadius = AILoseSightRadius;
@@ -25,55 +24,61 @@ AStealthEnemyAIController::AStealthEnemyAIController()
     SightConfig->DetectionByAffiliation.bDetectEnemies = true;
     SightConfig->DetectionByAffiliation.bDetectFriendlies = true;
     SightConfig->DetectionByAffiliation.bDetectNeutrals = true;
-
-    SetPerceptionComponent(*CreateDefaultSubobject<UAIPerceptionComponent>("Perception"));
-    GetPerceptionComponent()->SetDominantSense(*SightConfig->GetSenseImplementation());
-    GetPerceptionComponent()->OnPerceptionUpdated.AddDynamic(this, &AStealthEnemyAIController::OnPawnDetected);
-    GetPerceptionComponent()->ConfigureSense(*SightConfig);
+    
+    AIPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>("PerceptionComp");
+    AIPerceptionComponent->ConfigureSense(*SightConfig);
+    AIPerceptionComponent->SetDominantSense(*SightConfig->GetSenseImplementation());
+    AIPerceptionComponent->OnPerceptionUpdated.AddDynamic(this, &AStealthEnemyAIController::OnPawnDetected);
+    SetPerceptionComponent(*AIPerceptionComponent);
 }
 
 void AStealthEnemyAIController::OnPossess(APawn* InPawn)
 {
     Super::OnPossess(InPawn);
 
-    AStealthEnemyCharacter* StealthEnemyCharacter = Cast<AStealthEnemyCharacter>(InPawn);
-    if (StealthEnemyCharacter && StealthEnemyCharacter->TreeAsset)
+    AStealthEnemyCharacter* EnemyCharacter = Cast<AStealthEnemyCharacter>(InPawn);
+    if (EnemyCharacter && EnemyCharacter->TreeAsset)
     {
-        BBComp->InitializeBlackboard(*StealthEnemyCharacter->TreeAsset->BlackboardAsset);
-        BTComp->StartTree(*StealthEnemyCharacter->TreeAsset);
+        BlackboardComponent->InitializeBlackboard(*EnemyCharacter->TreeAsset->BlackboardAsset);
+        BehaviorTreeComponent->StartTree(*EnemyCharacter->TreeAsset);
     }
-}
-
-void AStealthEnemyAIController::OnPawnDetected(const TArray<AActor*>& DetectedPawns)
-{
-    for (size_t i = 0; i < DetectedPawns.Num();i++)
-        if (DetectedPawns[i] == GetWorld()->GetFirstPlayerController()->GetPawn()) 
-        {
-            DistanceToPlayer = GetPawn()->GetDistanceTo(DetectedPawns[i]);
-            BBComp->SetValue<UBlackboardKeyType_Bool>("HasLineOfSight", true);
-            BBComp->SetValue<UBlackboardKeyType_Object>("TargetActor", DetectedPawns[i]);
-        }
-}
-
-void AStealthEnemyAIController::BeginPlay() 
-{
-    Super::BeginPlay();
 }
 
 FRotator AStealthEnemyAIController::GetControlRotation() const
 {
-    if (GetPawn() == nullptr)
-        return FRotator(.0f, .0f, .0f);
-    else
-        return FRotator(.0f, GetPawn()->GetActorRotation().Yaw, .0f);
+    if (!GetPawn()) return FRotator::ZeroRotator;
+    return FRotator(0.f, GetPawn()->GetActorRotation().Yaw, 0.f);
 
 }
 
-void AStealthEnemyAIController::Tick(float DeltaSeconds) {
-    Super::Tick(DeltaSeconds);
-    if (DistanceToPlayer > AISightRadius)
+void AStealthEnemyAIController::OnPawnDetected(const TArray<AActor*>& DetectedPawns)
+{
+    for (AActor* Actor : DetectedPawns)
     {
-        BBComp->SetValue<UBlackboardKeyType_Bool>("HasLineOfSight", false);
-        BBComp->ClearValue("TargetActor");
+        if (!Actor->IsA<AStealthHeistCharacter>()) continue;
+
+        FActorPerceptionBlueprintInfo Info;
+        AIPerceptionComponent->GetActorsPerception(Actor, Info);
+
+        for (const FAIStimulus& Stimulus : Info.LastSensedStimuli)
+        {
+            if (Stimulus.Type != UAISense::GetSenseID<UAISense_Sight>()) continue;
+
+            if (Stimulus.WasSuccessfullySensed())
+            {
+                // Player spotted
+                BlackboardComponent->SetValueAsBool("HasLineOfSight", true);
+                BlackboardComponent->SetValueAsObject("TargetActor", Actor);
+                BlackboardComponent->SetValueAsVector("LastKnown", Actor->GetActorLocation());
+            }
+            
+            else
+            {
+                // Player Lost
+                BlackboardComponent->SetValueAsBool("HasLineOfSight", false);
+                BlackboardComponent->SetValueAsObject("TargetActor", nullptr);
+                // LastKnownLocation intentionally kept for Investigate state
+            }
+        }
     }
 }
