@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "StealthHeist/StealthHeistCharacter.h"
 #include "AI/StealthEnemyAIController.h"
 #include "AI/StealthEnemyCharacter.h"
+#include "StealthHeist/StealthHeistCharacter.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
@@ -49,6 +49,12 @@ FRotator AStealthEnemyAIController::GetControlRotation() const
     if (!GetPawn()) return FRotator::ZeroRotator;
     return FRotator(0.f, GetPawn()->GetActorRotation().Yaw, 0.f);
 
+}
+
+APawn* AStealthEnemyAIController::GetSeeingPawn() const
+{
+    UObject* Target = BlackboardComponent->GetValueAsObject("TargetActor");
+    return Cast<APawn>(Target);
 }
 
 void AStealthEnemyAIController::OnPawnDetected(const TArray<AActor*>& DetectedPawns)

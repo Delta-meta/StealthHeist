@@ -6,18 +6,15 @@
 #include "EnvironmentQuery/Items/EnvQueryItemType_Actor.h"
 #include "AI/StealthEnemyAIController.h"
 
-UFindEnemyQueryContext::UFindEnemyQueryContext() 
-{
-	
-
-
-}
-
 void UFindEnemyQueryContext::ProvideContext(FEnvQueryInstance& QueryInstance, FEnvQueryContextData& ContextData) const
 {
 	Super::ProvideContext(QueryInstance, ContextData);
 	AStealthEnemyAIController* AIController = Cast<AStealthEnemyAIController>((Cast<AActor>((QueryInstance.Owner).Get())->GetInstigatorController()));
 
 	if (AIController && AIController->GetSeeingPawn())
-		UEnvQueryItemType_Actor::SetContextHelper(ContextData, AIController->GetSeeingPawn());
+	{
+		TArray<AActor*> Actors;
+		Actors.Add(AIController->GetSeeingPawn());
+		UEnvQueryItemType_Actor::SetContextHelper(ContextData, Actors);
+	}	
 }

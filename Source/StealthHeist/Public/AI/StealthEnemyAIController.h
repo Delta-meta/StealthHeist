@@ -21,6 +21,7 @@ class STEALTHHEIST_API AStealthEnemyAIController : public AAIController
 		AStealthEnemyAIController();
 		virtual void OnPossess(APawn* InPawn) override;
 		virtual FRotator GetControlRotation() const override;
+		APawn* GetSeeingPawn() const;
 
 	protected:
 		UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
