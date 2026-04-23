@@ -16,6 +16,10 @@ AWeaponBase::AWeaponBase()
 	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>("WeaponMesh");
 	RootComponent = WeaponMesh;
 
+	// Disable collision so it doesn't interfere with character movement
+	WeaponMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	WeaponMesh->SetCollisionResponseToChannels(ECR_Ignore);
+
 }
 
 void AWeaponBase::Fire(AActor* FiringInstigator)

@@ -22,6 +22,22 @@ void AStealthEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	if (WeaponClass)
+	{
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = this;
+		SpawnParams.Instigator = this;
+
+		EquippedWeapon = GetWorld()->SpawnActor<AWeaponBase>(WeaponClass, SpawnParams);
+		if (EquippedWeapon) 
+		{
+			EquippedWeapon->AttachToComponent(
+				GetMesh(),
+				FAttachmentTransformRules::SnapToTargetIncludingScale,
+				FName("WeaponSocket")
+			);
+		}
+	}
 }
 
 // Called every frame

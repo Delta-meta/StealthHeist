@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "BehaviorTree/BehaviorTree.h"
+#include "Weapon/WeaponBase.h"
 #include "StealthEnemyCharacter.generated.h"
 
 
@@ -25,6 +26,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class APatrolPath* PatrolPath = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+		TSubclassOf<AWeaponBase> WeaponClass;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		AWeaponBase* EquippedWeapon;
 
 protected:
 	// Called when the game starts or when spawned

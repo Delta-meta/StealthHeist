@@ -17,29 +17,29 @@ UBTTask_PatrolToLocation::UBTTask_PatrolToLocation() {
 
 EBTNodeResult::Type UBTTask_PatrolToLocation::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-	UBlackboardComponent* MyBlackboard = OwnerComp.GetBlackboardComponent();
+	UBlackboardComponent* Blackboard = OwnerComp.GetBlackboardComponent();
 
 	// Get and cast AIController
-	AStealthEnemyAIController* MyController = Cast<AStealthEnemyAIController>(OwnerComp.GetAIOwner());
-	if (!MyController)
+	AStealthEnemyAIController* AIController = Cast<AStealthEnemyAIController>(OwnerComp.GetAIOwner());
+	if (!AIController)
 		return EBTNodeResult::Failed;
 
 	// Get the character the controller is possessing
-	AStealthEnemyCharacter* MyCharacter = Cast<AStealthEnemyCharacter>(MyController->GetPawn());
-	if (!MyCharacter)
+	AStealthEnemyCharacter* EnemyCharacter = Cast<AStealthEnemyCharacter>(AIController->GetPawn());
+	if (!EnemyCharacter)
 		return EBTNodeResult::Failed;
 
 	// Check if PatrolPath refrence is valid and locations are populated
-	APatrolPath* PathRef = Cast<APatrolPath>(MyCharacter->PatrolPath);
-	if (!PathRef || PathRef->Locations.Num() < 1)
+	APatrolPath* PatrolPath = Cast<APatrolPath>(EnemyCharacter->PatrolPath);
+	if (!PatrolPath || PatrolPath->Locations.Num() < 1)
 		return EBTNodeResult::Succeeded;
 	
 	// Set Blackbaord MoveToLocation key
-	MyBlackboard->SetValue<UBlackboardKeyType_Vector>("MoveToLoaction", PathRef->Locations[Index]);
+	
 
 	// Set the MoveToLocation Blackboard key to be the spline point
-	OwnerComp.GetBlackboardComponent()->SetValue<UBlackboardKeyType_Vector>("MoveToLocation", PathRef->Locations[Index]);
-	if (Index < PathRef->Locations.Num() - 1)
+	OwnerComp.GetBlackboardComponent()->SetValue<UBlackboardKeyType_Vector>("MoveToLocation", PatrolPath->Locations[Index]);
+	if (Index < PatrolPath->Locations.Num() - 1)
 	{
 		Index++;
 	}
