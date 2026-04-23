@@ -9,6 +9,7 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/Blackboard/BlackboardKeyType_Vector.h"
 #include "BehaviorTree/Tasks/BTTask_BlackboardBase.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 UBTTask_PatrolToLocation::UBTTask_PatrolToLocation() {
 	bCreateNodeInstance = true;
@@ -34,7 +35,9 @@ EBTNodeResult::Type UBTTask_PatrolToLocation::ExecuteTask(UBehaviorTreeComponent
 	if (!PatrolPath || PatrolPath->Locations.Num() < 1)
 		return EBTNodeResult::Succeeded;
 	
-	// Set Blackbaord MoveToLocation key
+	AIController->ClearFocus(EAIFocusPriority::Gameplay);
+	EnemyCharacter->bUseControllerRotationYaw = false;
+	EnemyCharacter->GetCharacterMovement()->bOrientRotationToMovement = true;
 	
 
 	// Set the MoveToLocation Blackboard key to be the spline point

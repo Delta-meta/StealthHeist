@@ -47,6 +47,11 @@ void AStealthEnemyAIController::OnPossess(APawn* InPawn)
 FRotator AStealthEnemyAIController::GetControlRotation() const
 {
     if (!GetPawn()) return FRotator::ZeroRotator;
+
+    // When we have a focus target 
+    if (GetFocusActor())
+        return Super::GetControlRotation();
+
     return FRotator(0.f, GetPawn()->GetActorRotation().Yaw, 0.f);
 
 }

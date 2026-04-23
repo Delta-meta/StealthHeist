@@ -24,16 +24,16 @@ class STEALTHHEIST_API AStealthEnemyAIController : public AAIController
 		APawn* GetSeeingPawn() const;
 
 	protected:
-		UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Sight")
 			float AISightRadius = 500.f;
 
-		UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Sight")
 			float AISightAge = 5.f;
 
-		UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Sight")
 			float AILoseSightRadius = AISightRadius + 50.f;
 
-		UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
+		UPROPERTY(VisibleAnywhere,BlueprintReadWrite, Category = "AI Sight")
 			float AIFieldOfView = 90.f;
 
 		UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
