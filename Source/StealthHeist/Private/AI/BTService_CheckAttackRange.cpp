@@ -9,7 +9,7 @@
 UBTService_CheckAttackRange::UBTService_CheckAttackRange()
 {
 	NodeName = "Check Attack Range";
-	Interval = 0.5f;
+	Interval = 0.1f;
 }
 
 void UBTService_CheckAttackRange::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)

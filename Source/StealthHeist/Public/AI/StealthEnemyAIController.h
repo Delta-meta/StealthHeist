@@ -25,13 +25,13 @@ class STEALTHHEIST_API AStealthEnemyAIController : public AAIController
 
 	protected:
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Sight")
-			float AISightRadius = 500.f;
+			float AISightRadius = 3000.f;
 
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Sight")
-			float AISightAge = 5.f;
+			float AISightAge = 10.f;
 
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Sight")
-			float AILoseSightRadius = AISightRadius + 50.f;
+			float AILoseSightRadius = AISightRadius + 1000.f;
 
 		UPROPERTY(VisibleAnywhere,BlueprintReadWrite, Category = "AI Sight")
 			float AIFieldOfView = 90.f;
@@ -48,4 +48,5 @@ class STEALTHHEIST_API AStealthEnemyAIController : public AAIController
 
 		UFUNCTION()
 			void OnPawnDetected(const TArray<AActor*>& DetectedPawns);
+			FTimerHandle LoseTargetTimer;
 };
