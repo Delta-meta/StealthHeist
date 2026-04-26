@@ -1,0 +1,52 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "AIController.h"
+#include "Perception/AIPerceptionComponent.h"
+#include "Perception/AISenseConfig_Sight.h"
+#include "BehaviorTree/BehaviorTreeComponent.h"
+#include "BehaviorTree/BlackboardComponent.h"
+#include "StealthEnemyAIController.generated.h"
+
+/**
+ * 
+ */
+UCLASS()
+class STEALTHHEIST_API AStealthEnemyAIController : public AAIController
+{
+	GENERATED_BODY()
+	public:
+		AStealthEnemyAIController();
+		virtual void OnPossess(APawn* InPawn) override;
+		virtual FRotator GetControlRotation() const override;
+		APawn* GetSeeingPawn() const;
+
+	protected:
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Sight")
+			float AISightRadius = 3000.f;
+
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Sight")
+			float AISightAge = 10.f;
+
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI Sight")
+			float AILoseSightRadius = AISightRadius + 1000.f;
+
+		UPROPERTY(VisibleAnywhere,BlueprintReadWrite, Category = "AI Sight")
+			float AIFieldOfView = 90.f;
+
+		UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+			UAISenseConfig_Sight* SightConfig;
+
+		UPROPERTY(VisibleAnywhere)
+			UAIPerceptionComponent* AIPerceptionComponent;
+
+	private:
+		UBehaviorTreeComponent* BehaviorTreeComponent;
+		UBlackboardComponent* BlackboardComponent;
+
+		UFUNCTION()
+			void OnPawnDetected(const TArray<AActor*>& DetectedPawns);
+			FTimerHandle LoseTargetTimer;
+};
