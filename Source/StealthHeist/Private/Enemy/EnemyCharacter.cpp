@@ -1,13 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "AI/StealthEnemyCharacter.h"
+#include "Enemy/EnemyCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
-AStealthEnemyCharacter::AStealthEnemyCharacter()
+AEnemyCharacter::AEnemyCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationPitch = false;
@@ -18,18 +18,18 @@ AStealthEnemyCharacter::AStealthEnemyCharacter()
 }
 
 // Called when the game starts or when spawned
-void AStealthEnemyCharacter::BeginPlay()
+void AEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	if (WeaponClass)
+
+	/*if (WeaponClass)
 	{
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.Owner = this;
 		SpawnParams.Instigator = this;
 
 		EquippedWeapon = GetWorld()->SpawnActor<AWeaponBase>(WeaponClass, SpawnParams);
-		if (EquippedWeapon) 
+		if (EquippedWeapon)
 		{
 			EquippedWeapon->AttachToComponent(
 				GetMesh(),
@@ -37,11 +37,11 @@ void AStealthEnemyCharacter::BeginPlay()
 				FName("WeaponSocket")
 			);
 		}
-	}
+	}*/
 }
 
 // Called every frame
-void AStealthEnemyCharacter::Tick(float DeltaTime)
+void AEnemyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 

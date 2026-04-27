@@ -4,9 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Components/BillboardComponent.h"
-#include "Components/ArrowComponent.h"
-#include "Components/SplineComponent.h"
 #include "PatrolPath.generated.h"
 
 UCLASS()
@@ -26,15 +23,4 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(EditAnywhere)
-	UBillboardComponent* Billboard;
-
-	UPROPERTY(EditAnywhere)
-	UArrowComponent* FacingDirection;
-
-	UPROPERTY(EditAnywhere)
-	USplineComponent* Path;
-
-	UPROPERTY(EditAnywhere)
-	TArray<FVector> Locations;
 };
